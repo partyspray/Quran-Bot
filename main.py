@@ -119,11 +119,27 @@ def handle_bot_added(update):
             subscribed_chats.remove(chat_id)
             save_channels() # تحديث الملف الخارجي وحذفها
             print(f"[-] تم حذف القناة: {chat_id}")
-
 @bot.message_handler(commands=['start'])
-def send_welcome(message):
-    if message.chat.type == 'private':
-        bot.reply_to(message, "أهلاً بك! أضف البوت لقناتك وارفع رتبته لمشرف ليقوم بنشر القرآن والأحاديث تلقائياً من الإنترنت.")
+def send_photo(message):
+    user_id = message.from_user.id
+    firstname = message.from_user.first_name
+    mention = f'<a href="tg://user?id={user_id}">{firstname}</a>'
+    markup = InlineKeyboardMarkup(row_width=2)
+    btn1 = InlineKeyboardButton('➕ اضف البوت لقناتك', url='https://t.me/Al_Quran_Alkareem_bot?startchannel=true')
+    btn2 = InlineKeyboardButton('💎 قناة البوت', url='https://t.me/mox_source')
+    btn3 = InlineKeyboardButton('🧑‍💻 المطور', url='https://t.me/qf9_0')
+    markup.add(btn1)
+    markup.add(btn2, btn3)
+
+    bot.send_photo(message.chat.id, photo=open('logo.jpg', 'rb'), caption=f"""
+<b>👋 مرحبا بك عزيزي {mention}
+
+📖 في بوت القرآن الكريم 
+
+📚 وظيفة البوت نشر آيات قرآنية تلقائيا
+
+📌اضغط على زر اضف البوت لقناتك لاضافة البوت لقناتك ، اعطي للبوت جميع صلاحيات النشر وسيقوم بالنشر في الوقت المحدد ...</b>
+""", reply_to_message_id=message.message_id, parse_mode='HTML', reply_markup=markup)
 
 # ----------------- دالة النشر التلقائي المستمر -----------------
 
